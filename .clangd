@@ -1,0 +1,22 @@
+# This file was used to clangd how to check your code
+
+Hover:
+  ShowAKA: Yes
+
+Diagnostics:
+  UnusedIncludes: Strict
+
+InlayHints:
+  Designators: Yes
+  Enabled: Yes
+  ParameterNames: Yes
+  DeducedTypes: Yes
+
+
+# CompileFlags:
+#   Add: [-Wno-implicit-function-declaration, -Wno-int-conversion, -ferror-limit=500]
+
+# Diagnostics:
+#   ClangTidy:
+#     Add: modernize*
+#     Remove: modernize-use-trailing-return-type
