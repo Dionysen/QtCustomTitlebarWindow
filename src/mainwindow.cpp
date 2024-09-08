@@ -96,17 +96,18 @@ void MainWindow::updateTitle()
 
 void MainWindow::mouseMoveEvent(QMouseEvent* event)
 {
+    qDebug() << event->pos();
     if (event->buttons() == Qt::LeftButton)
     {
         if (isMaximized() || isMinimized())
         {
             int width            = this->screen()->availableSize().width();
             int titleBeforeWidth = width - m_ButtonWidth * 3;
-            int beforeCursorX    = event->globalPosition().x();
+            int beforeCursorX    = event->pos().x();
+
 
             this->showNormal();
             int titleAfterWidth = this->size().width() - m_ButtonWidth * 3;
-            int afterCursorX    = event->globalPosition().x();
 
             int afterLenght = titleAfterWidth * beforeCursorX / titleBeforeWidth;
 
