@@ -96,27 +96,27 @@ void MainWindow::updateTitle()
 
 void MainWindow::mouseMoveEvent(QMouseEvent* event)
 {
-    qDebug() << event->pos();
+
     if (event->buttons() == Qt::LeftButton)
     {
         if (isMaximized() || isMinimized())
         {
+            // 计算最大化时鼠标在标题栏的相对位置
+
             int width            = this->screen()->availableSize().width();
             int titleBeforeWidth = width - m_ButtonWidth * 3;
             int beforeCursorX    = event->pos().x();
 
+            // 计算Normal下鼠标在标题栏的期望相对位置
+            int titleAfterWidth = normalGeometry().width() - m_ButtonWidth * 3;
+            int afterLenght     = titleAfterWidth * beforeCursorX / titleBeforeWidth;
 
+            // 取消最大化，这一步必须在normalGeometry()之后，因为此函数获取的是另一个状态的窗口Geo，即normal模式下获取的是最大化的Geo
             this->showNormal();
-            int titleAfterWidth = this->size().width() - m_ButtonWidth * 3;
-
-            int afterLenght = titleAfterWidth * beforeCursorX / titleBeforeWidth;
-
             this->move(event->globalPosition().x() - afterLenght, this->pos().y());
 
             m_StartMousePos  = event->globalPosition().toPoint();
             m_StartWindowPos = this->pos();
-
-            // TODO:
         }
 
         if (p_TitleBar->underMouse() && !p_MinimumBtn->underMouse() && !p_MaximumBtn->underMouse() && !p_CloseBtn->underMouse())
@@ -144,9 +144,6 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* event)
 
 void MainWindow::mouseDoubleClickEvent(QMouseEvent* event)
 {
-    int width = this->screen()->availableSize().width();
-    qDebug() << width;
-    qDebug() << this->size();
     if (p_TitleBar->underMouse() && !p_MinimumBtn->underMouse() && !p_MaximumBtn->underMouse() && !p_CloseBtn->underMouse())
     {
         toggleMaximize();
