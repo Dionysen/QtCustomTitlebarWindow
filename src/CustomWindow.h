@@ -1,20 +1,16 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef CustomWindow_H
+#define CustomWindow_H
 
-#include "qboxlayout.h"
-#include "qevent.h"
-#include "qmainwindow.h"
-#include "qpoint.h"
-#include "qpushbutton.h"
-#include <QMainWindow>
+#include <QEvent>
+#include <QPoint>
 #include <QPushButton>
-#include <QLabel>
 #include <QWidget>
+#include <QMainWindow>
+#include <QLabel>
 #include <QHBoxLayout>
 #include <QMouseEvent>
 
-
-class MainWindow : public QMainWindow
+class CustomWindow : public QWidget
 {
     Q_OBJECT
 
@@ -32,11 +28,19 @@ class MainWindow : public QMainWindow
     };
 
   public:
-    explicit MainWindow(QWidget* parent = 0);
-    ~MainWindow();
+    explicit CustomWindow(QWidget* parent = 0);
+    ~CustomWindow();
 
     void setTitleBarHeight(const int& height);
     void setButtonWidth(const int& width);
+
+    void setDarkMode(bool isDark);
+
+    // 覆写centralWidget相关
+    void setCentent(QWidget* widget)
+    {
+        p_CentralWidget->layout()->addWidget(widget);
+    }
 
   private:
     void InitWindow();
@@ -46,8 +50,8 @@ class MainWindow : public QMainWindow
 
     void toggleMaximize();
 
-    MainWindow::ResizeRegion getResizeRegion(const QPoint& pos);
-    void                     resizeWindow(const QPoint& globalPos);
+    CustomWindow::ResizeRegion getResizeRegion(const QPoint& pos);
+    void                       resizeWindow(const QPoint& globalPos);
 
     void setAllChildrenMouseTracking(QWidget* parent);
 
@@ -73,7 +77,9 @@ class MainWindow : public QMainWindow
     QLabel* p_TitleText;
     // 布局
     QVBoxLayout* p_MainLayout;
+    QVBoxLayout* p_CentralLayout;
     QHBoxLayout* p_TitleLayout;
+    QVBoxLayout* p_ThisLayout;
 
   private:
     int m_TitleHeight;
@@ -91,4 +97,4 @@ class MainWindow : public QMainWindow
     QPoint       m_lastMousePos;
 };
 
-#endif  // MAINWINDOW_H
+#endif  // CustomWindow_H

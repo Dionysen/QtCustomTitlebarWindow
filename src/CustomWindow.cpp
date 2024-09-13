@@ -1,59 +1,66 @@
-#include "mainwindow.h"
-#include "qboxlayout.h"
-#include "qevent.h"
-#include "qicon.h"
-#include "qlabel.h"
-#include "qlayout.h"
-#include "qlayoutitem.h"
-#include "qmainwindow.h"
-#include "qnamespace.h"
-#include "qobject.h"
-#include "qpushbutton.h"
+#include "CustomWindow.h"
+#include "qlogging.h"
+
+#include <QIcon>
+#include <QLayout>
+#include <QLayoutItem>
+#include <QObject>
 #include <QSpacerItem>
 #include <QSizePolicy>
-#include "qsizepolicy.h"
-#include "qwidget.h"
 #include <QApplication>
 #include <QPainter>
 #include <QStyle>
+#include <QButtonGroup>
+#include <QGraphicsDropShadowEffect>
+#include <QPainterPath>
+#include <QFile>
 
-MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent)
+CustomWindow::CustomWindow(QWidget* parent)
+    : QWidget(parent)
     , m_ButtonWidth(50)
     , m_TitleHeight(36)
     , m_borderWidth(5)
     , m_isResizing(false)
+    , m_IsPressedTitleBar(false)
 {
-    // 初始化指针，设置布局
+    // 初始化部件，设置布局
     InitWindow();
     // 连接按钮到对应功能
     connectBtns();
 }
 
-void MainWindow::InitWindow()
+void CustomWindow::InitWindow()
 {
     this->setWindowFlags(Qt::FramelessWindowHint);
-    resize(800, 600);
-    // 标题栏
-    p_TitleBar      = new QWidget(this);
-    p_CentralWidget = new QWidget(this);
-    p_MainWidget    = new QWidget(this);
+    this->resize(800, 600);
+    this->setObjectName("CustomWindow-Background");
 
-    p_CentralWidget->setToolTip("CentralWidget");
-    p_CentralWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    p_CentralWidget->setStyleSheet(QString("background-color: gray"));
+    // 标题栏
+    p_TitleBar = new QWidget(this);
+    p_TitleBar->setObjectName("titleBar");
+
+    // 中心部件
+    p_CentralWidget = new QWidget(this);
+
+    // 窗口部件
+    p_MainWidget = new QWidget(this);
+
     // 三个按钮
     p_MinimumBtn = new QPushButton(p_TitleBar);
     p_MaximumBtn = new QPushButton(p_TitleBar);
     p_CloseBtn   = new QPushButton(p_TitleBar);
-
+    p_MinimumBtn->setObjectName("titleBtn");
+    p_MaximumBtn->setObjectName("titleBtn");
+    p_CloseBtn->setObjectName("titleBtn");
     updateTitle();
 
     // 标题和图标
     p_TitleIcon = new QLabel(p_TitleBar);
     p_TitleText = new QLabel(p_TitleBar);
     p_TitleText->setText("Title");
-    // 布局
+
+    // ------- 布局 --------
+    // 标题栏
     p_TitleLayout = new QHBoxLayout;
     p_TitleLayout->addWidget(p_TitleIcon);
     p_TitleLayout->addWidget(p_TitleText);
@@ -67,22 +74,38 @@ void MainWindow::InitWindow()
     p_TitleLayout->setSpacing(0);
 
     p_TitleBar->setLayout(p_TitleLayout);
-    // p_TitleBar->setStyleSheet("QWidget { background-color: #1f2020; color: #000000;}");
 
+    // 中心部件
+    // 中心部件保持空白，mainwindow窗口可以放进去
+    p_CentralLayout = new QVBoxLayout(this);
+    p_CentralLayout->setContentsMargins(0, 0, 0, 0);
+    p_CentralLayout->setSpacing(0);
+    p_CentralWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    p_CentralWidget->setLayout(p_CentralLayout);
+
+    // 总体部件及其布局
     p_MainLayout = new QVBoxLayout;
     p_MainLayout->setContentsMargins(0, 0, 0, 0);
     p_MainLayout->setSpacing(0);
     p_MainLayout->addWidget(p_TitleBar);
     p_MainLayout->addWidget(p_CentralWidget);
-
     p_MainWidget->setLayout(p_MainLayout);
-    this->setCentralWidget(p_MainWidget);
+    p_MainWidget->setObjectName("MainWidget");
+
+    // 窗口布局
+    p_ThisLayout = new QVBoxLayout;
+    p_ThisLayout->addWidget(p_MainWidget);
+    p_ThisLayout->setContentsMargins(1, 1, 1, 1);
+    // p_ThisLayout->setContentsMargins(0, 0, 0, 0);
+    p_ThisLayout->setSpacing(0);
+
+    this->setLayout(p_ThisLayout);
 
     this->setMouseTracking(true);
     setAllChildrenMouseTracking(this);
 }
 
-void MainWindow::setAllChildrenMouseTracking(QWidget* parent)
+void CustomWindow::setAllChildrenMouseTracking(QWidget* parent)
 {
     // 获取所有子对象
     const auto& children = parent->children();
@@ -95,7 +118,6 @@ void MainWindow::setAllChildrenMouseTracking(QWidget* parent)
         if (widget)
         {
             widget->setMouseTracking(true);
-
             // 递归遍历其子部件
             setAllChildrenMouseTracking(widget);
         }
@@ -103,50 +125,44 @@ void MainWindow::setAllChildrenMouseTracking(QWidget* parent)
 }
 
 
-void MainWindow::connectBtns()
+void CustomWindow::connectBtns()
 {
-    p_MinimumBtn->setStyleSheet("QPushButton { border: none; }");
-    p_MaximumBtn->setStyleSheet("QPushButton { border: none; }");
-    p_CloseBtn->setStyleSheet("QPushButton { border: none; }");
-
-    p_MinimumBtn->setIcon(QIcon(":/icon/icon_window_minimize"));
-    p_CloseBtn->setIcon(QIcon(":/icon/icon_window_close"));
-    p_MaximumBtn->setIcon(QIcon(":/icon/icon_window_maximize"));
+    p_MinimumBtn->setIcon(QIcon(":/image/icon_window_minimize_dark"));
+    p_CloseBtn->setIcon(QIcon(":/image/icon_window_close_dark"));
+    p_MaximumBtn->setIcon(QIcon(":/image/icon_window_maximize_dark"));
 
     connect(p_CloseBtn, &QPushButton::clicked, this, [this]() { this->close(); });
     connect(p_MinimumBtn, &QPushButton::clicked, this, [this]() { this->showMinimized(); });
-    connect(p_MaximumBtn, &QPushButton::clicked, this, [this]() { this->toggleMaximize(); });
+    connect(p_MaximumBtn, &QPushButton::clicked, this, [this]() { toggleMaximize(); });
 }
 
-void MainWindow::setTitleBarHeight(const int& height)
+void CustomWindow::setTitleBarHeight(const int& height)
 {
     m_TitleHeight = height;
     updateTitle();
 }
 
-void MainWindow::setButtonWidth(const int& width)
+void CustomWindow::setButtonWidth(const int& width)
 {
     m_ButtonWidth = width;
     updateTitle();
 }
 
-void MainWindow::updateTitleBarButton()
+void CustomWindow::updateTitleBarButton()
 {
     p_MinimumBtn->setFixedSize(m_ButtonWidth, m_TitleHeight);
     p_MaximumBtn->setFixedSize(m_ButtonWidth, m_TitleHeight);
     p_CloseBtn->setFixedSize(m_ButtonWidth, m_TitleHeight);
 }
 
-void MainWindow::updateTitle()
+void CustomWindow::updateTitle()
 {
     p_TitleBar->setFixedHeight(m_TitleHeight);
     updateTitleBarButton();
 }
 
-void MainWindow::mouseMoveEvent(QMouseEvent* event)
+void CustomWindow::mouseMoveEvent(QMouseEvent* event)
 {
-
-
     if (event->buttons() == Qt::LeftButton && !m_IsDoubleClicked && !m_isResizing)
     {
         if (isMaximized() || isMinimized())
@@ -194,7 +210,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent* event)
                 break;
             case ResizeRegion::Left:
             case ResizeRegion::Right:
-                qDebug() << "LEft";
                 setCursor(Qt::SizeHorCursor);
                 break;
             case ResizeRegion::TopLeft:
@@ -215,7 +230,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent* event)
     event->accept();
 }
 
-void MainWindow::mousePressEvent(QMouseEvent* event)
+void CustomWindow::mousePressEvent(QMouseEvent* event)
 {
 
     if (event->button() == Qt::LeftButton && !m_IsPressedTitleBar)
@@ -237,7 +252,7 @@ void MainWindow::mousePressEvent(QMouseEvent* event)
     }
 }
 
-void MainWindow::mouseReleaseEvent(QMouseEvent* event)
+void CustomWindow::mouseReleaseEvent(QMouseEvent* event)
 {
     // Titlebar
     m_IsPressedTitleBar = false;
@@ -248,7 +263,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* event)
     event->accept();
 }
 
-void MainWindow::mouseDoubleClickEvent(QMouseEvent* event)
+void CustomWindow::mouseDoubleClickEvent(QMouseEvent* event)
 {
     if (p_TitleBar->underMouse() && !p_MinimumBtn->underMouse() && !p_MaximumBtn->underMouse() && !p_CloseBtn->underMouse())
     {
@@ -257,42 +272,74 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent* event)
     }
 }
 
-void MainWindow::toggleMaximize()
+void CustomWindow::toggleMaximize()
 {
     if (this->isMaximized())
     {
         this->showNormal();
-        p_MaximumBtn->setIcon(QIcon(":/icon/icon_window_maximize"));
+        p_MaximumBtn->setIcon(QIcon(":/image/icon_window_maximize_dark"));
     }
     else if (!this->isMaximized())
     {
         this->showMaximized();
-        p_MaximumBtn->setIcon(QIcon(":/icon/icon_window_restore"));
+        p_MaximumBtn->setIcon(QIcon(":/image/icon_window_restore_dark"));
     }
 }
 
-void MainWindow::paintEvent(QPaintEvent* event)
+void CustomWindow::paintEvent(QPaintEvent* event)
 {
+
+    // TODO: Window shadow
+
     // QPainter painter(this);
-    // painter.setRenderHint(QPainter::Antialiasing);
+    // painter.setRenderHint(QPainter::Antialiasing, true);
 
-    // // 自定义阴影颜色和透明度
-    // QColor shadowColor(0, 0, 0, 180);  // 调整透明度以增强阴影效果
-    // int    shadowWidth = 20;           // 增加阴影宽度
+    // // 绘制阴影效果
+    // QColor shadowColor(0, 0, 0, 50);  // 半透明黑色，模拟macOS阴影效果
+    // int    shadowSize = 10;           // 阴影大小为8像素
 
-    // // 绘制外部阴影矩形框
-    // for (int i = 0; i < shadowWidth; ++i)
+    // // 绘制矩形的阴影
+    // for (int i = 0; i < shadowSize; ++i)
     // {
-    //     shadowColor.setAlpha(180 * (1.0 - (i / (double)shadowWidth)));  // 阴影透明度逐渐减弱
-    //     painter.setPen(shadowColor);
-    //     painter.drawRoundedRect(rect().adjusted(i, i, -i, -i), 10, 10);  // 使用圆角矩形绘制阴影
+    //     shadowColor.setAlpha(50 - i * 5);  // 渐变阴影，透明度从100逐渐减少
+    //     painter.setPen(Qt::NoPen);
+    //     painter.setBrush(shadowColor);
+    //     painter.drawRect(i, i, width() - 2 * i, height() - 2 * i);  // 绘制普通矩形阴影
     // }
 
-    // // 继续绘制窗口的其他内容
-    // QMainWindow::paintEvent(event);
+    // // 绘制窗口本身
+    // painter.setBrush(Qt::white);
+    // painter.setPen(Qt::NoPen);
+    // painter.drawRect(shadowSize, shadowSize, width() - 2 * shadowSize, height() - 2 * shadowSize);  // 绘制普通矩形窗口
+
+    // if (isMaximized())
+    // {
+    //     return;
+    // }
+    // int          nShadowsWidth = 10;
+    // int          nRadius       = 0;
+    // QPainterPath path;
+    // path.setFillRule(Qt::WindingFill);
+    // path.addRoundedRect(nShadowsWidth, nShadowsWidth, this->width() - nShadowsWidth * 2, this->height() - nShadowsWidth * 2, nRadius, nRadius);
+    // QPainter painter(this);
+    // QColor   color(0, 0, 0, 200);
+    // for (int i = 0; i < nShadowsWidth; i++)
+    // {
+    //     QPainterPath path;
+    //     path.setFillRule(Qt::WindingFill);
+    //     path.addRoundedRect(nShadowsWidth - i, nShadowsWidth - i, this->width() - (nShadowsWidth - i) * 2, this->height() - (nShadowsWidth - i) *
+    //     2,
+    //                         nRadius + i, nRadius + i);
+    //     color.setAlpha(100 - qSqrt(i) * 50);
+    //     painter.setPen(color);
+    //     painter.drawPath(path);
+    // }
+
+    // QWidget::paintEvent(event);  // 保持对父类的调用
 }
 
-MainWindow::ResizeRegion MainWindow::getResizeRegion(const QPoint& pos)
+
+CustomWindow::ResizeRegion CustomWindow::getResizeRegion(const QPoint& pos)
 {
     bool onLeft   = pos.x() < m_borderWidth;
     bool onRight  = pos.x() > width() - m_borderWidth;
@@ -319,7 +366,7 @@ MainWindow::ResizeRegion MainWindow::getResizeRegion(const QPoint& pos)
     return ResizeRegion::None;
 }
 
-void MainWindow::resizeWindow(const QPoint& globalPos)
+void CustomWindow::resizeWindow(const QPoint& globalPos)
 {
     QRect geom  = geometry();
     int   diffX = globalPos.x() - m_lastMousePos.x();
@@ -362,6 +409,40 @@ void MainWindow::resizeWindow(const QPoint& globalPos)
     m_lastMousePos = globalPos;
 }
 
-MainWindow::~MainWindow()
+void CustomWindow::setDarkMode(bool isDark)
+{
+    if (isDark)
+    {
+        // qDebug() << "qss";
+        // QFile file(":/qss/dark.qss");
+        // file.open(QFile::ReadOnly);
+        // QString styleSheet = file.readAll();
+        // qApp->setStyleSheet(styleSheet);
+
+        QFile styleFile(":/qss/dark.qss");
+        if (!styleFile.exists())
+        {
+            qWarning() << "QSS file does not exist!";
+        }
+
+        if (styleFile.open(QFile::ReadOnly))
+        {
+            QString styleSheet = QLatin1String(styleFile.readAll());
+            qApp->setStyleSheet(styleSheet);
+            styleFile.close();
+        }
+        else
+        {
+            qWarning() << "Unable to open QSS file";
+        }
+    }
+    else
+    {
+        // TODO: Light mode
+        qApp->setStyleSheet("");
+    }
+}
+
+CustomWindow::~CustomWindow()
 {
 }

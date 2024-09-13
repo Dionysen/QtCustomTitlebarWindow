@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/icon">
-        <file>icon_window_minimize.png</file>
-        <!-- <file>icon_window_restore.png</file> -->
-        <file>icon_window_maximize.png</file>
-        <file>icon_window_close.png</file>
-        <file>icon_window_close_click.png</file>
-    </qresource>
-</RCC>

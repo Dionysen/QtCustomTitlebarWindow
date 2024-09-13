@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>icon_window_minimize_dark.png</file>
+        <file>icon_window_maximize_dark.png</file>
+        <file>icon_window_close_dark.png</file>
+        <file>icon_window_restore_dark.png</file>
+        <file>check.png</file>
+        <file>checkpartial.png</file>
+        <file>down_arrow.png</file>
+    </qresource>
+</RCC>
