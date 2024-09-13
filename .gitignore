@@ -8,3 +8,5 @@ build/
 
 ./compile_commands.json
 .vscode/compile_commands.json
+
+compile_commands.json
