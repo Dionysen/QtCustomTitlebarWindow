@@ -1,7 +1,7 @@
 add_rules("mode.debug", "mode.release")
 
 target("CustomWindow")
-    add_rules("qt.shared")
+    add_rules("qt.static")
 
     add_headerfiles("src/*.h")
     add_files("src/*.cpp")
@@ -9,8 +9,6 @@ target("CustomWindow")
 
     -- add files with Q_OBJECT meta (only for qt.moc)
     add_files("src/CustomWindow.h")
-
-
 
     add_frameworks("QtGui", "QtWidgets")
 
