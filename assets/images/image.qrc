@@ -4,8 +4,9 @@
         <file>icon_window_maximize_dark.png</file>
         <file>icon_window_close_dark.png</file>
         <file>icon_window_restore_dark.png</file>
-        <file>check.png</file>
-        <file>checkpartial.png</file>
-        <file>down_arrow.png</file>
+        <file>icon_window_minimize.png</file>
+        <file>icon_window_maximize.png</file>
+        <file>icon_window_close.png</file>
+        <file>icon_window_restore.png</file>
     </qresource>
 </RCC>

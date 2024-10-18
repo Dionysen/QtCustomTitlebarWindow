@@ -1,0 +1,48 @@
+ <RCC>
+    <qresource prefix="/icon_dark">
+        <!-- dark -->
+        <file alias="new">../icon/new.svg</file>        
+        <file alias="open">../icon/open.svg</file>
+        <file alias="save">../icon/save.svg</file>
+        <file alias="saveAs">../icon/saveAs.svg</file>
+        <file alias="copy">../icon/copy.svg</file>
+        <file alias="cut">../icon/cut.svg</file>
+        <file alias="paste">../icon/paste.svg</file>
+        <file alias="undo">../icon/undo.svg</file>
+        <file alias="redo">../icon/redo.svg</file>
+        <file alias="find">../icon/find.svg</file>
+        <file alias="replace">../icon/replace.svg</file>
+        <file alias="forward">../icon/forward.svg</file>
+        <file alias="backward">../icon/backward.svg</file>
+        <file alias="schema">../icon/schema.svg</file>
+        <file alias="attribute">../icon/attribute.svg</file>
+        <file alias="auxiliary">../icon/auxiliary.svg</file>
+        <file alias="findNext">../icon/findNext.svg</file>
+        <file alias="location">../icon/location.svg</file>
+        <file alias="exit">../icon/exit.svg</file>
+        <file alias="cite">../icon/cite.svg</file>
+        <file alias="color">../icon/color.svg</file>
+        <file alias="refresh">../icon/refresh.svg</file>
+        <file alias="recent">../icon/recent.svg</file>
+        <file alias="branch">../icon/branch.svg</file>
+        <file alias="help">../icon/help.svg</file>
+        <file alias="about">../icon/about.svg</file>
+        <file alias="visible">../icon/visible.svg</file>
+        <file alias="statusbar">../icon/statusbar.svg</file>
+        <file alias="toolbar">../icon/toolbar.svg</file>
+        <file alias="font">../icon/font.svg</file>
+        <file alias="editor">../icon/editor.svg</file>    
+    </qresource>
+    <qresource prefix="/image_dark">
+        <file alias="branchOpen">../images/branchOpen.svg</file>
+        <file alias="drag">../images/drag.svg</file>
+        <file alias="dragVer">../images/dragVer.svg</file>
+        <file alias="check">../images/check.svg</file>
+        <file alias="check_png">../images/check.png</file>
+        <file alias="checkpartial">../images/checkpartial.png</file>
+        <file alias="down_arrow">../images/down_arrow.png</file>
+    </qresource>
+    <qresource prefix="/stylesheet_dark">
+        <file alias="style">../stylesheet/dark.qss</file>
+    </qresource>
+</RCC>
