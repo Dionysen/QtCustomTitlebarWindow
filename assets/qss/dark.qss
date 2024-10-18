@@ -514,3 +514,166 @@ QScrollBar::sub-page:vertical,
 QScrollBar::sub-page:horizontal {
   background: none; /* 隐藏滚动条页面背景 */
 }
+
+/* DockWidget 样式 */
+QDockWidget {
+  background-color: #333333;
+  color: #d3dae3;
+  border: 1px solid #1f2020;
+}
+
+QDockWidget::title {
+  background-color: #1f2020;
+  padding: 5px;
+  text-align: left;
+}
+
+QDockWidget::close-button,
+QDockWidget::float-button {
+  background-color: #1f2020;
+  border: none;
+  padding: 2px;
+}
+
+QDockWidget::close-button:hover,
+QDockWidget::float-button:hover {
+  background-color: #3c3c3c;
+}
+
+QDockWidget::close-button:pressed,
+QDockWidget::float-button:pressed {
+  background-color: #505050;
+}
+
+/* TreeView 样式 */
+QTreeView {
+  background-color: #2b2b2b;
+  color: #d3dae3;
+  border: 1px solid #1f2020;
+}
+
+QTreeView::item {
+  padding: 5px;
+}
+
+QTreeView::item:hover {
+  background-color: #3c3c3c;
+}
+
+QTreeView::item:selected {
+  background-color: #4a4a4a;
+}
+
+QTreeView::branch {
+  background-color: #2b2b2b;
+}
+/* 
+QTreeView::branch:has-siblings:!adjoins-item {
+  border-image: url(branch-vline.png) 0;
+}
+
+QTreeView::branch:has-siblings:adjoins-item {
+  border-image: url(branch-more.png) 0;
+}
+
+QTreeView::branch:!has-children:!has-siblings:adjoins-item {
+  border-image: url(branch-end.png) 0;
+}
+
+QTreeView::branch:has-children:!has-siblings:closed,
+QTreeView::branch:closed:has-children:has-siblings {
+  border-image: none;
+  image: url(branch-closed.png);
+}
+
+QTreeView::branch:open:has-children:!has-siblings,
+QTreeView::branch:open:has-children:has-siblings {
+  border-image: none;
+  image: url(branch-open.png);
+} */
+
+/* TableView 样式 */
+QTableView {
+  background-color: #2b2b2b;
+  color: #d3dae3;
+  border: 1px solid #1f2020;
+  gridline-color: #797979;
+}
+
+QTableView::item {
+  padding: 5px;
+}
+
+QTableView::item:hover {
+  background-color: #3c3c3c;
+}
+
+QTableView::item:selected {
+  background-color: #4a4a4a;
+}
+
+QHeaderView {
+  background-color: #383838;
+  color: #d3dae3;
+}
+
+QHeaderView::section {
+  background-color: #383838;
+  color: #d3dae3;
+  padding: 5px;
+  border: 1px solid #1f2020;
+}
+
+QHeaderView::section:hover {
+  background-color: #4a4a4a;
+}
+
+QTableCornerButton::section {
+  background-color: #383838;
+  border: 1px solid #1f2020;
+}
+
+/* DialogWindow 样式 */
+QDialog {
+  background-color: #333333;
+  color: #d3dae3;
+}
+
+QDialog QLabel {
+  color: #d3dae3;
+}
+
+QDialog QPushButton {
+  background-color: #1f2020;
+  color: #d3dae3;
+  border: 1px solid #050a0e;
+  padding: 5px;
+  border-radius: 2px;
+}
+
+QDialog QPushButton:hover {
+  background-color: #3c3c3c;
+}
+
+QDialog QPushButton:pressed {
+  background-color: #505050;
+}
+
+/* ListView 样式 */
+QListView {
+  background-color: #2b2b2b;
+  color: #d3dae3;
+  border: 1px solid #1f2020;
+}
+
+QListView::item {
+  padding: 5px;
+}
+
+QListView::item:hover {
+  background-color: #3c3c3c;
+}
+
+QListView::item:selected {
+  background-color: #4a4a4a;
+}
